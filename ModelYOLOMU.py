@@ -2,6 +2,7 @@ import time
 import cv2
 from ultralytics import YOLO
 import torch
+import psutil
 
 # โหลดโมเดล YOLOv8 และย้ายไปยัง GPU
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -39,8 +40,14 @@ while True:
     # เพิ่มจำนวนเฟรมที่ประมวลผล
     frame_count += 1
 
-    # แสดงข้อมูลเฟรม
+    # วัดการใช้หน่วยความจำ
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    memory_usage = memory_info.rss / 1024 / 1024  # แปลงเป็น MB
+
+    # แสดงข้อมูลเฟรมและการใช้หน่วยความจำ
     print(f"Frame: {frame_count}, Time per frame: {frame_time:.4f} seconds")
+    print(f"Memory usage: {memory_usage:.4f} MB")
 
     # แสดงผลลัพธ์ (ถ้าต้องการ)
     # results.show()
